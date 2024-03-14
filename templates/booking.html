@@ -1,17 +1,78 @@
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition['name']}} || GUDLFT</title>
-</head>
-<body>
-    <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
-    <form action="/purchasePlaces" method="post">
-        <input type="hidden" name="club" value="{{club['name']}}">
-        <input type="hidden" name="competition" value="{{competition['name']}}">
-        <label for="places">How many places?</label><input type="number" name="places" id=""/>
-        <button type="submit">Book</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking for {{ competition['name'] }} || GUDLFT</title>
+  </head>
+
+  <body>
+    <!-- Heading displaying the competition name -->
+    <h2>{{ competition['name'] }}</h2>
+
+    <!-- Display available places and club points -->
+    Places available: {{ competition['numberOfPlaces'] }} Points available: {{
+    club['points'] }}
+
+    <!-- Form for booking places -->
+    <form
+      action="/purchasePlaces"
+      method="post"
+      onsubmit="return validateForm()"
+    >
+      <!-- Hidden input fields for club, competition, and points available -->
+      <input type="hidden" name="club" value="{{ club['name'] }}" />
+      <input
+        type="hidden"
+        name="competition"
+        value="{{ competition['name'] }}"
+      />
+      <input
+        type="hidden"
+        name="pointsAvailable"
+        id="pointsAvailable"
+        value="{{ club['points'] }}"
+      />
+
+      <!-- Label and input for specifying the number of places to book -->
+      <label for="places">How many places?</label>
+      <input type="number" name="places" id="places" min="1" max="12" />
+
+      <!-- Display error messages in red -->
+      <p id="error-message" style="color: red"></p>
+
+      <!-- Submit button to initiate the booking -->
+      <button type="submit">Book</button>
     </form>
-</body>
+
+    <!-- JavaScript script for client-side validation -->
+    <script>
+      function validateForm() {
+        // Get input elements
+        var places = document.getElementById("places");
+        var pointsAvailable = document.getElementById("pointsAvailable");
+
+        // Calculate the maximum allowed places (minimum of 12 and user input)
+        var maxPlaces = Math.min(12, parseInt(places.value));
+
+        // Get the available places from the server-side template variable
+        var placesAvailable = "{{ competition['numberOfPlaces'] }}";
+
+        // Validate if the user is trying to book more places than available points
+        if (maxPlaces > pointsAvailable.value) {
+          alert("You cannot book more than " + maxPlaces + " places.");
+          return false;
+        }
+
+        // Validate if the user is trying to book more places than available in the competition
+        if (maxPlaces > placesAvailable) {
+          alert("You cannot book more than " + placesAvailable + " places.");
+          return false;
+        }
+
+        // Form is valid, allow submission
+        return true;
+      }
+    </script>
+  </body>
 </html>
