@@ -44,11 +44,25 @@ def index():
 
 
 # Route: Handle form submission for displaying club summary
-@app.route("/showSummary", methods=["POST"])
+@app.route("/showSummary", methods=["POST", "GET"])
 def showSummary():
-    # Retrieve club based on entered email from the form
-    club = [club for club in clubs if club["email"] == request.form["email"]][0]
-    return render_template("welcome.html", club=club, competitions=competitions)
+    if request.method == "POST":
+        try:
+            club = [c for c in clubs if c["email"] == request.form["email"]][0]
+            return render_template("welcome.html", club=club, competitions=competitions)
+
+        except IndexError:
+            flash("Please enter a valid email")
+            return redirect(url_for("index"))
+
+    if request.method == "GET":
+        # Retrieve the club data
+        club_name = request.args.get("club")
+        club = [c for c in clubs if c["name"] == club_name][0]
+        if club is not None:
+            return render_template("welcome.html", club=club, competitions=competitions)
+        else:
+            return redirect(url_for("index"))
 
 
 # Route: Display the booking page for a specific competition and club
@@ -121,7 +135,9 @@ def purchasePlaces():
         return render_template("welcome.html", club=club, competitions=competitions)
 
 
-# TODO: Add route for displaying points
+@app.route("/public_board")
+def boardPublic():
+    return render_template("public_board.html", clubs=clubs)
 
 
 # Route: Handle user logout

@@ -1,0 +1,28 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GUDLFT Display Board</title>
+  </head>
+
+  <body>
+    <h1>GUDLFT Club's display board</h1>
+    <hr />
+    <table>
+      <tr>
+        <th>Club's name</th>
+        <th>Points</th>
+      </tr>
+      {% for c in clubs %}
+      <tr>
+        <td>{{ c['name'] }}</td>
+        <td>{{ c['points'] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <hr />
+    <form action="{{ url_for('index' )}}" method="get">
+      <button type="submit">Back to Index</button>
+    </form>
+  </body>
+</html>
