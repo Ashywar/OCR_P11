@@ -51,7 +51,7 @@
     </form>
 
     <!-- JavaScript script for client-side validation -->
-    <script>
+    <!-- <script>
       function validateForm() {
         // Get input elements
         var places = document.getElementById("places");
@@ -65,7 +65,13 @@
 
         // Validate if the user is trying to book more places than available points
         if (maxPlaces > pointsAvailable.value) {
-          alert("You cannot book more than " + maxPlaces + " places.");
+          alert(
+            "You are trying to redeem" +
+              placesRequired +
+              "places, which is more than available" +
+              placesAvailable +
+              "."
+          );
           return false;
         }
 
@@ -78,6 +84,6 @@
         // Form is valid, allow submission
         return true;
       }
-    </script>
+    </script> -->
   </body>
 </html>
